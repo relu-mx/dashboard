@@ -1,77 +1,23 @@
 import { Helmet } from 'react-helmet-async';
-import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
 import {useEffect, useState} from 'react';
 // @mui
 import {
     Card,
-    Table,
     Stack,
-    Paper,
-    Avatar,
+
     Button,
     Popover,
-    Checkbox,
-    TableRow,
+
     MenuItem,
-    TableBody,
-    TableCell,
+
     Container,
     Typography,
-    IconButton,
-    TableContainer,
-    TablePagination,
+
 } from '@mui/material';
-// components
-import Label from '../components/label';
-import Iconify from '../components/iconify';
-import Scrollbar from '../components/scrollbar';
-// sections
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-// mock
-import USERLIST from '../_mock/user';
+
 import RequestsTable from "../components/tables/RequestsTable";
+import Iconify from "../components/iconify";
 
-// ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-    { id: 'guestName', label: 'Huésped', alignRight: false },
-    { id: 'roomNumber', label: 'Habitacion', alignRight: false },
-    { id: 'requestType', label: 'Solicitud', alignRight: false },
-    { id: 'time', label: 'Hora', alignRight: false },
-    { id: 'data', label: 'Informacion', alignRight: false },
-];
-
-// ----------------------------------------------------------------------
-
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array, comparator, query) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    if (query) {
-        return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-    }
-    return stabilizedThis.map((el) => el[0]);
-}
 
 export default function RequestsPage() {
     const [open, setOpen] = useState(null);
