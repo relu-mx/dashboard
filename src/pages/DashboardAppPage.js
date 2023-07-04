@@ -28,7 +28,7 @@ export default function DashboardAppPage() {
 
   useEffect(() => {
 
-      const url = 'http://localhost:8000/server-info';
+      const url = 'http://app.relu.mx/server-info';
 
       const options = {
           method: 'GET',
@@ -37,7 +37,7 @@ export default function DashboardAppPage() {
       fetch(url, options)
           .then(res => res.json())
           .then(json => setServerInfo(json))
-          .catch(err => console.error(`error: + ${err}`));
+          .catch(err => setServerInfo({}));
 
   }, [])
 
@@ -66,7 +66,7 @@ export default function DashboardAppPage() {
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Tokens Used" total={serverInfo.usedTokens} color="error" icon={'ant-design:tags-outlined'} />
+            <AppWidgetSummary title="Tokens Used" total={serverInfo.usedTokens ? serverInfo.usedTokens : "0"} color="error" icon={'ant-design:tags-outlined'} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
