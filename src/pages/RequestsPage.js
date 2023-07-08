@@ -18,6 +18,9 @@ import {
     query,
     collection,
     onSnapshot,
+    updateDoc,
+    doc,
+    where
 
 } from "firebase/firestore";
 import {db} from "../firebaseConfig";
@@ -31,14 +34,7 @@ export default function RequestsPage() {
     //const [snapShot, setSnapShot] = useState(null);
 
     const [selected, setSelected] = useState([]);
-    const [rows, setRows] = useState([ {
-        id: "1",
-        guest_name: 'John Doe',
-        room_number: '101',
-        request_type: 'Maintenance',
-        time: '9:30 AM',
-        information: 'Need assistance with the air conditioning.',
-    },]);
+    const [rows, setRows] = useState([]);
 
 
     useEffect(() => {
@@ -52,7 +48,7 @@ export default function RequestsPage() {
         });
 
         const q = query(
-            collection(db, "messages"));
+            collection(db, "messages"), where("completed", "==", false));
 
         const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
             let messages = [];
@@ -82,8 +78,16 @@ export default function RequestsPage() {
    
 
     // mark seleted rows as completed, remove them from the table
-    const completeSelected = () => {
+    const completeSelected =  () => {
         let newRows = rows.filter((row) => !selected.includes(row.id));
+        // update database, set each request "completed" field to true
+        selected.forEach(async (id) => {
+            await updateDoc(doc(db, "messages", id), {
+                completed: true
+            });
+        });
+
+
         setRows(newRows);
         setSelected([]);
     };

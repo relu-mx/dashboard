@@ -35,11 +35,11 @@ function RequestsTable({ rows, selected, setSelected }) {
                     <TableRow>
                         <TableCell></TableCell>
 
-                        <TableCell>Guest Name</TableCell>
-                        <TableCell>Room Number</TableCell>
-                        <TableCell>Request Type</TableCell>
-                        <TableCell>Time</TableCell>
-                        <TableCell>Information</TableCell>
+                        <TableCell>Huesped</TableCell>
+                        <TableCell>Habitacion</TableCell>
+                        <TableCell>Solicitud</TableCell>
+                        <TableCell>Fecha/Hora</TableCell>
+                        <TableCell>Informacion adicional</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
