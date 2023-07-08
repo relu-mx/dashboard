@@ -67,7 +67,7 @@ function RequestsTable({ rows, selected, setSelected }) {
 RequestsTable.propTypes = {
     rows: PropTypes.arrayOf(
         PropTypes.shape({
-            id: PropTypes.number.isRequired,
+            id: PropTypes.string.isRequired,
             guest_name: PropTypes.string.isRequired,
             room_number: PropTypes.string.isRequired,
             request_type: PropTypes.string.isRequired,

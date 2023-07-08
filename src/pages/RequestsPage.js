@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useRef} from 'react';
 // @mui
 import {
     Card,
@@ -14,6 +14,15 @@ import {
     Typography,
 
 } from '@mui/material';
+import {
+    query,
+    collection,
+    orderBy,
+    onSnapshot,
+    limit,
+    getDocs,
+} from "firebase/firestore";
+import {db} from "../firebaseConfig";
 
 import RequestsTable from "../components/tables/RequestsTable";
 import Iconify from "../components/iconify";
@@ -21,29 +30,68 @@ import Iconify from "../components/iconify";
 
 export default function RequestsPage() {
     const [open, setOpen] = useState(null);
+    const [snapShot, setSnapShot] = useState(null);
 
     const [selected, setSelected] = useState([]);
+    const [rows, setRows] = useState([ {
+        id: "1",
+        guest_name: 'John Doe',
+        room_number: '101',
+        request_type: 'Maintenance',
+        time: '9:30 AM',
+        information: 'Need assistance with the air conditioning.',
+    },]);
+
 
     useEffect(() => {
-        console.log(selected)
-    }, [selected]);
+        // ask permission to send notifications
+        Notification.requestPermission().then((permission) => {
+            if (permission === 'granted') {
+                console.log('Notification permission granted.');
+            } else {
+                console.log('Unable to get permission to notify.');
+            }
+        });
 
+        const q = query(
+            collection(db, "messages"));
+
+        const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
+            let messages = [];
+            QuerySnapshot.forEach((doc) => {
+                // if notification allowed, send notification with doc.data() as message
+                if (Notification.permission === 'granted') {
+                    navigator.serviceWorker.getRegistration().then((reg) => {
+                        reg.showNotification(doc.data().message);
+                    });
+                }
+                
+                messages.push({ ...doc.data(), id: doc.id });
+            });
+            setRows(messages);
+        });
+        return () => {
+            unsubscribe()
+        };
+    }, []);
+
+        
 
     const handleCloseMenu = () => {
         setOpen(null);
     };
 
-    const rows = [
-        {
-            id: 1,
-            guest_name: 'John Doe',
-            room_number: '101',
-            request_type: 'Maintenance',
-            time: '9:30 AM',
-            information: 'Need assistance with the air conditioning.',
-        },
-        // Add more rows as needed
-    ];
+   
+
+    // mark seleted rows as completed, remove them from the table
+    const completeSelected = () => {
+        let newRows = rows.filter((row) => !selected.includes(row.id));
+        setRows(newRows);
+        setSelected([]);
+    };
+
+    
+
 
     return (
         <>
@@ -58,7 +106,7 @@ export default function RequestsPage() {
                         Administrar solicitudes
                     </Typography>
                     {   !(selected.length === 0) &&
-                        <Button variant="contained" startIcon={<Iconify icon="uil:check"/>}>
+                        <Button variant="contained" onClick={completeSelected} startIcon={<Iconify icon="uil:check"/>}>
                             Marcar completada
                         </Button>
                     }
