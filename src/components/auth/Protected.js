@@ -8,7 +8,9 @@ const Protected = ({children }) => {
 
     const [user, loading, error] = useAuthState(auth);
     if (loading) {
-        return <CircularProgress />
+        return <div style={{display: "flex", justifyContent: "center", alignItems: "center", height: "100%"}}>
+                <CircularProgress />
+        </div>
     }
     
     if (error) {

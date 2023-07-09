@@ -1,30 +1,60 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
+import { Link, Stack, IconButton, InputAdornment, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../../components/iconify';
+import {useSignInWithEmailAndPassword} from "react-firebase-hooks/auth";
+import {auth} from "../../../firebaseConfig";
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
 
+  const [email,setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+
   const [showPassword, setShowPassword] = useState(false);
+    const [
+        signInWithEmailAndPassword,
+
+    ] = useSignInWithEmailAndPassword(auth);
+
+
 
   const handleClick = () => {
-    navigate('/dashboard', { replace: true });
+
+      signInWithEmailAndPassword(email, password)
+          .then((credentials) => {
+
+              if (credentials) {
+                  navigate('/dashboard', { replace: true });
+              }
+        })
+          .catch((err) => {
+              console.log(err)
+          })
   };
+
+  const handleEmailChange = (event) => {
+      setEmail(event.target.value)
+  }
+
+  const handlePasswordChange = (event) => {
+      setPassword(event.target.value)
+  }
 
   return (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField name="email" label="Correo electronico" onChange={handleEmailChange} />
 
         <TextField
           name="password"
-          label="Password"
+          label="Contraseña"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -35,18 +65,18 @@ export default function LoginForm() {
               </InputAdornment>
             ),
           }}
+          onChange={handlePasswordChange}
         />
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <Checkbox name="remember" label="Remember me" />
         <Link variant="subtitle2" underline="hover">
-          Forgot password?
+          Restablecer contraseña
         </Link>
       </Stack>
 
       <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
-        Login
+        Iniciar Sesion
       </LoadingButton>
     </>
   );

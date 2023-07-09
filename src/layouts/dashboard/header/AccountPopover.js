@@ -2,8 +2,11 @@ import { useState } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
+import {useSignOut} from "react-firebase-hooks/auth";
+import {auth} from "../../../firebaseConfig";
 // mocks_
 import account from '../../../_mock/account';
+import {useNavigate} from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +29,8 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+  const [signOut] = useSignOut(auth);
+  const navigate = useNavigate();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -35,6 +40,11 @@ export default function AccountPopover() {
     setOpen(null);
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/login');
+
+  }
   return (
     <>
       <IconButton
@@ -97,7 +107,7 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleClose} sx={{ m: 1 }}>
+        <MenuItem onClick={handleSignOut} sx={{ m: 1 }}>
           Logout
         </MenuItem>
       </Popover>
