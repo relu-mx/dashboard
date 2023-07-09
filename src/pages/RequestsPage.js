@@ -56,6 +56,7 @@ export default function RequestsPage() {
                 // if notification allowed, send notification with doc.data() as message
                 if (Notification.permission === 'granted') {
                     navigator.serviceWorker.getRegistration().then((reg) => {
+                        console.log(reg);
                         reg.showNotification(doc.data().message);
                     });
                 }
@@ -69,6 +70,12 @@ export default function RequestsPage() {
         };
     }, []);
 
+    // get message with id
+    const getMessageWithId =  (id) => {
+        
+        return rows.find((message) => message.id === id);
+
+    }
         
 
     const handleCloseMenu = () => {
@@ -92,6 +99,40 @@ export default function RequestsPage() {
         setSelected([]);
     };
 
+    const errorSelected = async () => {
+
+        const url = "https://concierge-ai-app.onrender.com/request-failed"
+
+        // send cancelled request to server
+        selected.forEach(async (request) => {
+            const document = getMessageWithId(request);
+            console.log(request);
+                let options = {
+                    method: 'POST',
+                    headers: {
+                    Accept: '*/*',
+                    'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        from: document.from,
+                    })
+                };
+
+                fetch(url, options)
+                .then(res => res.json())
+                .then(json => console.log(json))
+                .catch(err => console.error('error:' + err));
+
+                // update document, add completed: true
+                await updateDoc(doc(db, "messages", request), {
+                    completed: true
+                });
+                
+        }
+        );
+
+    }
     
 
 
@@ -108,9 +149,14 @@ export default function RequestsPage() {
                         Administrar solicitudes
                     </Typography>
                     {   !(selected.length === 0) &&
+                        <Stack direction={"row"} columnGap={5}>
                         <Button variant="contained" onClick={completeSelected} startIcon={<Iconify icon="uil:check"/>}>
                             Marcar completada
                         </Button>
+                        <Button variant="contained" onClick={errorSelected} startIcon={<Iconify icon="basil:cross-outline"/>} color={"error"}>
+                        Rechazar
+                        </Button>
+                        </Stack>
                     }
                 </Stack>
 

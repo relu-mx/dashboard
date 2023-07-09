@@ -27,6 +27,14 @@ function RequestsTable({ rows, selected, setSelected }) {
         }
     };
 
+    const firebaseTimestampToDateString = (timestamp) => {
+        const date = timestamp.toDate();
+        return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+    };
+
+    
+    
+
 
     return (
         <TableContainer component={Paper}>
@@ -43,7 +51,15 @@ function RequestsTable({ rows, selected, setSelected }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
+                    {rows.sort((a, b) => {
+        if (a.time < b.time) {
+            return -1;
+        }
+        if (a.time > b.time) {
+            return 1;
+        }
+        return 0;
+    }).map((row) => (
                         <TableRow key={row.id}>
                             <TableCell padding="checkbox">
                                 <Checkbox
@@ -54,7 +70,7 @@ function RequestsTable({ rows, selected, setSelected }) {
                             <TableCell>{row.guest_name}</TableCell>
                             <TableCell>{row.room_number}</TableCell>
                             <TableCell>{row.request_type}</TableCell>
-                            <TableCell>{row.time}</TableCell>
+                            <TableCell>{firebaseTimestampToDateString(row.time)}</TableCell>
                             <TableCell>{row.information}</TableCell>
                         </TableRow>
                     ))}
@@ -71,7 +87,7 @@ RequestsTable.propTypes = {
             guest_name: PropTypes.string.isRequired,
             room_number: PropTypes.string.isRequired,
             request_type: PropTypes.string.isRequired,
-            time: PropTypes.string.isRequired,
+            time: PropTypes.object.isRequired,
             information: PropTypes.string.isRequired,
         })
     ).isRequired,

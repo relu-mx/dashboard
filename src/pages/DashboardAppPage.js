@@ -28,7 +28,7 @@ export default function DashboardAppPage() {
 
   useEffect(() => {
 
-      const url = 'http://app.relu.mx/server-info';
+      const url = 'https://concierge-ai-app.onrender.com/server-info';
 
       const options = {
           method: 'GET',
@@ -37,7 +37,10 @@ export default function DashboardAppPage() {
       fetch(url, options)
           .then(res => res.json())
           .then(json => setServerInfo(json))
-          .catch(err => setServerInfo({}));
+          .catch(err => {
+              console.error(err)
+              setServerInfo({})
+          });
 
   }, [])
 
