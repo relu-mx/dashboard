@@ -21,6 +21,11 @@ const navConfig = [
     path: '/dashboard/requests',
     icon: icon('ic_user')
   },
+  {
+    title: 'logs',
+    path: '/dashboard/logs',
+    icon: icon('ic_user')
+  },
 
 ];
 

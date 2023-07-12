@@ -54,16 +54,17 @@ export default function RequestsPage() {
             let messages = [];
             QuerySnapshot.forEach((doc) => {
                 // if notification allowed, send notification with doc.data() as message
-                if (Notification.permission === 'granted') {
-                    navigator.serviceWorker.getRegistration().then((reg) => {
-                        console.log(reg);
-                        reg.showNotification(doc.data().message);
-                    });
-                }
+
                 
                 messages.push({ ...doc.data(), id: doc.id });
             });
+
+            
+            // remove any row in which time is not present
+            messages = messages.filter((message) => message.time !== undefined);
+            
             setRows(messages);
+
         });
         return () => {
             unsubscribe()

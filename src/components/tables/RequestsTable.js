@@ -32,10 +32,6 @@ function RequestsTable({ rows, selected, setSelected }) {
         return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
     };
 
-    
-    
-
-
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="Guest Request Table">
