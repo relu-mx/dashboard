@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -18,7 +18,18 @@ const useStyles = makeStyles({
 
 function RequestsTable({ rows, selected, setSelected }) {
     const classes = useStyles();
-
+    const sortedRows = rows.sort((a, b) => {
+        if (a.time < b.time) {
+            return -1;
+        }
+        if (a.time > b.time) {
+            return 1;
+        }
+        return 0;
+    })
+    useEffect(() => {
+        console.log(rows)
+    }, [])
     const handleRowSelect = (rowId) => {
         if (selected.includes(rowId)) {
             setSelected(selected.filter((id) => id !== rowId));
@@ -32,7 +43,7 @@ function RequestsTable({ rows, selected, setSelected }) {
         return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
     };
 
-    return (
+    return  (
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="Guest Request Table">
                 <TableHead>
@@ -47,29 +58,25 @@ function RequestsTable({ rows, selected, setSelected }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.sort((a, b) => {
-        if (a.time < b.time) {
-            return -1;
-        }
-        if (a.time > b.time) {
-            return 1;
-        }
-        return 0;
-    }).map((row) => (
-                        <TableRow key={row.id}>
-                            <TableCell padding="checkbox">
-                                <Checkbox
-                                    checked={selected.includes(row.id)}
-                                    onChange={() => handleRowSelect(row.id)}
-                                />
-                            </TableCell>
-                            <TableCell>{row.guest_name}</TableCell>
-                            <TableCell>{row.room_number}</TableCell>
-                            <TableCell>{row.request_type}</TableCell>
-                            <TableCell>{firebaseTimestampToDateString(row.time)}</TableCell>
-                            <TableCell>{row.information}</TableCell>
-                        </TableRow>
-                    ))}
+                    {
+                        sortedRows.map((row) => {
+                            console.log(row)
+                            return (
+                                <TableRow key={row.id}>
+                                    <TableCell padding="checkbox">
+                                        <Checkbox
+                                            checked={selected.includes(row.id)}
+                                            onChange={() => handleRowSelect(row.id)}
+                                        />
+                                    </TableCell>
+                                    <TableCell>{row.guest_name}</TableCell>
+                                    <TableCell>{row.room_number}</TableCell>
+                                    <TableCell>{row.request_type}</TableCell>
+                                    <TableCell>{firebaseTimestampToDateString(row.time)}</TableCell>
+                                    <TableCell>{`${JSON.stringify(row.information)}`}</TableCell>
+                                </TableRow>
+                            )
+                        })}
                 </TableBody>
             </Table>
         </TableContainer>

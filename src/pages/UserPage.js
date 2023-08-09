@@ -29,6 +29,7 @@ import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
 import USERLIST from '../_mock/user';
+import UserDialog from "../components/dialogs/UserDialog";
 
 // ----------------------------------------------------------------------
 
@@ -145,10 +146,11 @@ export default function UserPage() {
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
+  let handleClose;
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> Users | Concierge Ai </title>
       </Helmet>
 
       <Container>
@@ -287,6 +289,11 @@ export default function UserPage() {
           Delete
         </MenuItem>
       </Popover>
+      <UserDialog
+          selectedValue={selectedValue}
+          open={open}
+          onClose={handleClose}
+      />
     </>
   );
 }
