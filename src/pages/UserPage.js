@@ -146,7 +146,7 @@ export default function UserPage() {
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
-  let handleClose;
+
   return (
     <>
       <Helmet>
@@ -290,9 +290,9 @@ export default function UserPage() {
         </MenuItem>
       </Popover>
       <UserDialog
-          selectedValue={selectedValue}
+          selectedValue={selected}
           open={open}
-          onClose={handleClose}
+          onClose={handleCloseMenu}
       />
     </>
   );
