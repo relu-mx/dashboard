@@ -1,4 +1,3 @@
-// netlify/functions/getGuests.ts
 import { Handler } from '@netlify/functions';
 import axios from 'axios';
 
