@@ -29,4 +29,15 @@ const navConfig = [
 
 ];
 
-export default navConfig;
+const defaultConfig =  [
+
+  {
+    title: 'solicitudes',
+    path: '/dashboard/requests',
+    icon: icon('ic_user')
+  },
+
+
+];
+
+export {navConfig, defaultConfig};

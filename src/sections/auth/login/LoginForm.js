@@ -30,8 +30,10 @@ export default function LoginForm() {
       signInWithEmailAndPassword(email, password)
           .then((credentials) => {
 
-              if (credentials) {
+              if (credentials.user && credentials.user.uid === "3eDTJC7YwASH2wLX21dD3dEfpwj1") {
                   navigate('/dashboard', { replace: true });
+              } else {
+                  navigate('/dashboard/requests', { replace: true });
               }
         })
           .catch((err) => {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
+import { Box, Typography, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
 import {useSignOut} from "react-firebase-hooks/auth";
 import {auth} from "../../../firebaseConfig";
 // mocks_
@@ -10,20 +10,6 @@ import {useNavigate} from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
-const MENU_OPTIONS = [
-  {
-    label: 'Home',
-    icon: 'eva:home-fill',
-  },
-  {
-    label: 'Profile',
-    icon: 'eva:person-fill',
-  },
-  {
-    label: 'Settings',
-    icon: 'eva:settings-2-fill',
-  },
-];
 
 // ----------------------------------------------------------------------
 
@@ -95,17 +81,8 @@ export default function AccountPopover() {
           </Typography>
         </Box>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Stack sx={{ p: 1 }}>
-          {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} onClick={handleClose}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem onClick={handleSignOut} sx={{ m: 1 }}>
           Logout
